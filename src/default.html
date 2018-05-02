@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <title>demo</title>
+</head>
+<body>
+<script src="http://cdn.mh7788.com/JS2/zepto.min.js"></script>
+<script src="http://cdn.mh7788.com/JS/mobiscroll/mobiscroll.min.js"></script>
+<script>
+    $.fn.swiper=function(){
+        var sisel=this;
+        var w = sisel.width(),h=sisel.height();sisel.find(".swiper-wrapper").append(sisel.find(".swiper-item").eq(0).clone());
+        var item = sisel.find(".swiper-item");
+        var wrap = sisel.find(".swiper-wrapper");
+        var ww = (item.length - 1) * w, ed = item.length - 1;
+        var pag = sisel.find(".swiper-pagination"),nextBtn=sisel.find('.swiper-button-next'),prevBtn=sisel.find('.swiper-button-prev');
+        for (var i = 0; i < item.length - 2; i++) {
+            pag.append('<span class="swiper-pagination-bullet"> </span>');
+        }
+        sisel.height(h);
+        wrap.width(item.length * w);
+        item.height(h).width(w);
+        var firstTouch = {}; var now = ''; var touch = {}; var scrollTop = 0; var is_mousedown = false;
+        var stapos = 0;
+        var autoivl,timeout;
+        var lastMove = 0; var autoTimes = 0; var animation; var iste = false; var lastMoves = [];
+        pag.find('.swiper-pagination-bullet').on({'mouseenter':function(){
+            clearivl();clearTimeout(timeout);
+            var index=Math.abs(scrollTop / w);
+            index=index===ed?0:index;
+            var $index=$(this).index();
+            if(index!==$index){
+                scrollTop=-w*$index;
+                wrap.stop().animate({left:scrollTop + 'px'},300);toggpag();
+            }
+        },
+            'mouseleave':function(){
+                setivl();
+            }
+        });
+        prevBtn.on({'mouseenter':function(){clearivl();clearTimeout(timeout);},'mouseleave':function(){setivl();},'click':function(){
+            swipweToPrev();
+        }});
+        nextBtn.on({'mouseenter':function(){clearivl();clearTimeout(timeout);},'mouseleave':function(){setivl();},'click':function(){
+            swipweToNext();
+        }});
+        function ton(msg) {
+            if (lastMoves[2] > 0) {
+                if (msg.left) {
+                    scrollTop = -w * (msg.index > 0 ? msg.index - 1 : 0);
+                } else {
+                    scrollTop = -w * (msg.index);
+                }
+            } else {
+                if (msg.left) {
+                    scrollTop = -w * (msg.index + 1);
+                } else {
+
+                    scrollTop = -w * (msg.index < ww ? msg.index + 1 : ww);
+                }
+            }
+            wrap.animate({left:scrollTop + 'px'},300);toggpag();
+        };
+        function cald() {
+            if (scrollTop % w === 0) {
+                return { end: true, index: Math.abs(parseInt(scrollTop / w)) };
+            } else {
+                return { end: false, index: parseInt(Math.abs(scrollTop / w)), left: Math.abs((scrollTop % w)) < (w / 2) ? true : false }
+            }
+        }
+        function toggpag() {
+            pag.find('.active').removeClass('active');var index=Math.abs(scrollTop / w);
+            pag.find('.swiper-pagination-bullet').eq(index===ed?0:index).addClass('active');
+        };
+        function destroy() {
+            wrap.off('touchstart MSPointerDown pointerdown mousedown touchmove MSPointerMove pointermove mousemove touchend MSPointerUp pointerup mouseup'); wrap = null; self = null;
+        }
+        function setivl(){
+            if(!autoivl){
+                autoivl=window.setInterval(function(){
+                    swipweToNext();
+                },5000);
+            }
+        };
+        function swipweToNext(){
+            var msg = cald();
+            if(msg.end){
+                if((msg.index+1)===item.length){
+                    scrollTop=0;wrap.finish();
+                    wrap.css({left:0});
+                    timeout=setTimeout(function(){scrollTop=-w;
+                        wrap.animate({left:scrollTop + 'px'},300);
+                        toggpag();},20);
+                }else{
+                    scrollTop=-(msg.index+1)*w;
+                    wrap.animate({left:scrollTop + 'px'},300);toggpag();
+                }
+            }
+        }
+        function swipweToPrev(){
+            var msg = cald();
+            if(msg.end){
+                if(msg.index===0){
+                    scrollTop=-(item.length-1)*w;wrap.finish();
+                    wrap.css({left:scrollTop});
+                    timeout=setTimeout(function(){scrollTop=-(item.length-2)*w;
+                        wrap.animate({left:scrollTop + 'px'},300);
+                        toggpag();},20);
+                }else{
+                    scrollTop=-(msg.index-1)*w;
+                    wrap.animate({left:scrollTop + 'px'},300);toggpag();
+                }
+            }
+        }
+        function clearivl(){
+            if(autoivl){
+                window.clearInterval(autoivl);autoivl=null;
+            }
+        }
+        $(window).on('orientationchange resize', function (e) {
+            w = sisel.width();
+            ww = (item.length - 1) * w, ed = item.length - 1;
+            wrap.width(item.length * w);
+            item.width(w);reset();
+        });
+        function reset() {
+            firstTouch = {}; now = ''; touch = {}; scrollTop = 0; is_mousedown = false; stapos = 0;
+            pag.find('.active').removeClass('active');
+            pag.find('.swiper-pagination-bullet').eq(0).addClass('active');
+            lastMove = 0; autoTimes = 0; iste = false; lastMoves = [];
+            wrap.css({left:scrollTop+'px'});
+        }
+        setivl();
+    }
+</script>
+</body>
+</html>

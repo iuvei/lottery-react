@@ -1,0 +1,43 @@
+{
+  "name": "react-wx-texst",
+  "version": "0.0.1",
+  "scripts": {
+    "server": "nodemon server/index.js",
+    "start": "node server/index.js",
+    "client": "webpack --config build/build-client.js --mode development",
+    "dev": "webpack-dev-server --hot --inline --mode development"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "mysql": "^2.15.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "webpack": "^4.1.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babel-runtime": "^6.26.0",
+    "cookie-parser": "^1.4.3",
+    "css-loader": "^0.28.11",
+    "file-loader": "^1.1.11",
+    "history": "^4.7.2",
+    "html-webpack-plugin": "^3.0.7",
+    "node-sass": "^4.7.2",
+    "react-router-redux": "^4.0.8",
+    "redux-thunk": "^2.2.0",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.20.3",
+    "url-loader": "^1.0.1",
+    "webpack-cli": "^2.0.12",
+    "webpack-dev-server": "^3.1.1"
+  }
+}
